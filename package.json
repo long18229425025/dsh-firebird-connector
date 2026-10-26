@@ -1,0 +1,49 @@
+{
+  "name": "dsh-firebird-connector",
+  "version": "0.1.1",
+  "description": "Firebird 2.5-5.0 database connector for DeepSeek Harness: named connections, SQL guardrails, parameter binding and JSONL audit.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "driver",
+    "cordis.patch.yml",
+    "config.example.yml",
+    "README.md"
+  ],
+  "dependencies": {},
+  "scripts": {
+    "test": "node --test \"test/unit/*.test.js\"",
+    "test:unit": "node --test \"test/unit/*.test.js\"",
+    "test:integration": "node --test --test-concurrency=1 \"test/integration/*.test.js\"",
+    "prepublishOnly": "npm test"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "firebird",
+    "database"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/longjieli/dsh-firebird-connector.git"
+  },
+  "homepage": "https://github.com/longjieli/dsh-firebird-connector#readme",
+  "bugs": {
+    "url": "https://github.com/longjieli/dsh-firebird-connector/issues"
+  },
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

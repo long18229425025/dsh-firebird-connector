@@ -1,0 +1,13 @@
+node_modules/
+.tmp-docbuild/
+coverage/
+*.tgz
+*.log
+npm-debug.log*
+.env
+.env.*
+.DS_Store
+Thumbs.db
+
+# Local/unrelated working documents, not part of the plugin
+工业系统全景关系指南.md

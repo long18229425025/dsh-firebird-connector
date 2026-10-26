@@ -1,0 +1,7 @@
+# Bundle layer: insert only this plugin; never rewrite official rows.
+# Configure credentials through environment variables or DSH credential refs.
+# Runtime dependencies (node-firebird) are intentionally not declared here and
+# must be injected into the dsh profile by the operator.
+- insert:
+    - id: firebird-connector
+      name: dsh-firebird-connector

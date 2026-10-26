@@ -1,0 +1,42 @@
+name: dsh-firebird-integration
+
+services:
+  firebird25:
+    image: jacobalberty/firebird:2.5-sc
+    environment:
+      ISC_PASSWORD: masterkey
+      FIREBIRD_DATABASE: it25.fdb
+    ports:
+      - "3025:3050"
+    volumes:
+      - fb25-data:/firebird/data
+    restart: unless-stopped
+
+  firebird30:
+    image: firebirdsql/firebird:3.0.14
+    environment:
+      FIREBIRD_ROOT_PASSWORD: masterkey
+      FIREBIRD_DATABASE: it30.fdb
+      FIREBIRD_DATABASE_DEFAULT_CHARSET: UTF8
+    ports:
+      - "3030:3050"
+    volumes:
+      - fb30-data:/var/lib/firebird/data
+    restart: unless-stopped
+
+  firebird50:
+    image: firebirdsql/firebird:5.0.4
+    environment:
+      FIREBIRD_ROOT_PASSWORD: masterkey
+      FIREBIRD_DATABASE: it50.fdb
+      FIREBIRD_DATABASE_DEFAULT_CHARSET: UTF8
+    ports:
+      - "3035:3050"
+    volumes:
+      - fb50-data:/var/lib/firebird/data
+    restart: unless-stopped
+
+volumes:
+  fb25-data:
+  fb30-data:
+  fb50-data:

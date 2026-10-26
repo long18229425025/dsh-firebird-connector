@@ -1,0 +1,74 @@
+# dsh-firebird-connector 配置示例
+#
+# 把下面的条目合并到目标 profile 的 cordis.patch.yml：
+#   Web:     ~/.dsh/profiles/web/cordis.patch.yml
+#   Desktop: ~/.dsh/profiles/desktop/cordis.patch.yml
+# Web 和 Desktop 相互独立，需要分别安装、分别配置；保存后重启对应客户端。
+# bundle 自带的 patch 已经插入了 id: firebird-connector，这里按同一个 id 覆盖 config。
+#
+# 凭据只能来自环境变量（*Env）或 dsh 凭据引用（*Ref），禁止明文 user/password；
+# 插件会在建立连接时才读取凭据，不会把凭据写入配置、工具结果或审计日志。
+#
+# Windows 服务器上的数据库路径不要写成 /D://...：
+#   database: 'D:/apps/app.fdb'
+#   dsn: firebird://127.0.0.1:3050/D:/apps/app.fdb
+#
+# 认证与传输：
+#   authPlugin 默认 auto：先试 Srp，服务器拒绝时回退 Legacy_Auth（Firebird 2.5）。
+#   wireCrypt 默认 false：服务器未启用/未强制 WireCrypt 时必须保持 false；
+#   服务器要求加密时改为 true。
+- id: firebird-connector
+  config:
+    logLevel: info
+    audit:
+      file: ~/.dsh/firebird/audit.jsonl
+
+    connections:
+      # 只读连接：只允许 SELECT / WITH / EXPLAIN
+      app_ro:
+        dsn: firebird://127.0.0.1:3050//data/app.fdb
+        accessMode: readonly
+        charset: UTF8
+        # authPlugin: auto
+        # wireCrypt: false
+        userEnv: FB_APP_RO_USER
+        passwordEnv: FB_APP_RO_PASSWORD
+        maxRows: 500
+        queryTimeoutSeconds: 30
+
+      # 读写连接：DML + 表/视图/索引 DDL，启用对象白名单
+      app_rw:
+        host: 127.0.0.1
+        port: 3050
+        database: '/data/app.fdb'
+        accessMode: readwrite
+        charset: UTF8
+        allowedObjects:
+          - CUSTOMERS
+          - ORDERS
+          - V_ORDERS
+        # 也可以改用 dsh 凭据引用（二选一，不能和环境变量同时出现）：
+        # userRef: firebird/app-rw-user
+        # passwordRef: firebird/app-rw-password
+        userEnv: FB_APP_RW_USER
+        passwordEnv: FB_APP_RW_PASSWORD
+        role: APP_WRITER
+        allowRoleSwitch: true
+        idleTimeoutSeconds: 300
+
+      # 管理连接：存储过程/触发器/角色/GRANT 以及用户管理
+      app_admin:
+        dsn: jdbc:firebirdsql://db.internal:3050//data/app.fdb
+        accessMode: admin
+        charset: UTF8
+        userRef: firebird/app-admin-user
+        passwordRef: firebird/app-admin-password
+        # 默认拒绝无 WHERE 的 UPDATE/DELETE，以及写 RDB$ 系统表。
+        # 只有明确了解风险时才打开对应开关；打开后仍需 confirmDangerous: true。
+        allowUnrestrictedDML: false
+        allowSystemTables: false
+        idleTimeoutSeconds: 300
+        connectTimeoutSeconds: 10
+        queryTimeoutSeconds: 30
+        ddlTimeoutSeconds: 60
+        maxRows: 1000
