@@ -34,11 +34,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/longjieli/dsh-firebird-connector.git"
+    "url": "git+https://github.com/long18229425025/dsh-firebird-connector.git"
   },
-  "homepage": "https://github.com/longjieli/dsh-firebird-connector#readme",
+  "homepage": "https://github.com/long18229425025/dsh-firebird-connector#readme",
   "bugs": {
-    "url": "https://github.com/longjieli/dsh-firebird-connector/issues"
+    "url": "https://github.com/long18229425025/dsh-firebird-connector/issues"
   },
   "license": "MIT",
   "dsh": {
